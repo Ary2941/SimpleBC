@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Matriz de Quadrados</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            gap: 5px;
+        }
+
+        .square {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #333;
+        }
+
+        .livre {
+            background-color: green;
+        }
+
+        .usando {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h2>Status dos quadrados</h2>
+    <div class="grid">
+        {% for key, value in status.items() %}
+            <div class="square {% if value == 0 %}livre{% else %}usando{% endif %}">{{key}}</div>
+        {% endfor %}
+    </div>
+</body>
+</html>

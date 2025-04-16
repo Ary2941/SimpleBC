@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
+</head>
+<body>
+    <div class="container">
+        <h1>criar transação</h1>
+        <form id="transactionForm">
+
+            <label for="user">Usuário:</label>
+            <input type="text" id="user" name="user" placeholder="user" required><br><br>
+
+            <label for="registry">registro:</label>
+            <select id="registry" name="registry">
+                <option value=1>Peguei a chave</option>
+                <option value=0>Devolvi a chave</option>
+            </select><br><br>
+
+            <label for="key">Chave:</label>
+            <select id="key" name="key">
+                {% for key in status.keys() %}
+                    <option value="{{ key }}">chave {{ key }}</option>
+                {% endfor %}
+            </select><br><br>
+
+            <button type="submit">CONFIRMAR</button>
+            <p id="responseMessage"></p> <!-- Exibindo o status da localização -->
+        </form>
+    </div>
+<script>
+    document.getElementById("transactionForm").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Impede o envio padrão do formulário
+        document.getElementById("responseMessage").innerText = "...";
+
+        
+        try {
+            const user = document.getElementById("user").value;
+            const registry = parseInt(document.getElementById("registry").value);
+            const key = document.getElementById("key")?.value;
+            const timestamp = new Date().toISOString();
+            const formData = new FormData();
+
+        
+            formData.append('transactionData', JSON.stringify({
+                user      : user,
+                registry  : registry,
+                key       : key,
+                timestamp : timestamp,
+            }));
+
+            // Enviando a requisição como JSON
+            const response = await fetch('/send_transaction', {
+                method: 'POST',
+                body: formData  
+            });
+
+            const result = await response.json();
+            console.log(result.responseMessage)
+            document.getElementById("responseMessage").innerText = result.responseMessage;
+        } catch (error) {
+            console.error("Erro:", error);
+            document.getElementById("responseMessage").innerText = "Erro ao computar transação.";
+        }
+    });
+</script>
+
+</body>
+</html>
